@@ -1,3 +1,5 @@
+#### 📦 This repository is part of my archive of old projects I have worked on and happened to back up prior to 2022. These projects are messy, are of low quality and do not reflect my current programming ability or professionalism. 📦
+
 # CS:GO Cheat Archive 
 A collection of CS:GO cheat projects I have worked on (For archiving purposes, these projects aren't functional)
 
