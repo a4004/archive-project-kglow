@@ -1,0 +1,87 @@
+;
+; ROG-DRIVER.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Sample ; TODO: edit Class
+ClassGuid={78A1C341-4539-11d3-B88D-00C04FAD5171} ; TODO: edit ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=ROG-DRIVER.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+PnpLockDown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+ROG-DRIVER_Device_CoInstaller_CopyFiles = 11
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=SampleClassReg
+
+[SampleClassReg]
+HKR,,,0,%ClassName%
+HKR,,Icon,,-5
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+ROG-DRIVER.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%ROG-DRIVER.DeviceDesc%=ROG-DRIVER_Device, Root\ROG-DRIVER ; TODO: edit hw-id
+
+[ROG-DRIVER_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+ROG-DRIVER.sys
+
+;-------------- Service installation
+[ROG-DRIVER_Device.NT.Services]
+AddService = ROG-DRIVER,%SPSVCINST_ASSOCSERVICE%, ROG-DRIVER_Service_Inst
+
+; -------------- ROG-DRIVER driver install sections
+[ROG-DRIVER_Service_Inst]
+DisplayName    = %ROG-DRIVER.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\ROG-DRIVER.sys
+
+;
+;--- ROG-DRIVER_Device Coinstaller installation ------
+;
+
+[ROG-DRIVER_Device.NT.CoInstallers]
+AddReg=ROG-DRIVER_Device_CoInstaller_AddReg
+CopyFiles=ROG-DRIVER_Device_CoInstaller_CopyFiles
+
+[ROG-DRIVER_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[ROG-DRIVER_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[ROG-DRIVER_Device.NT.Wdf]
+KmdfService =  ROG-DRIVER, ROG-DRIVER_wdfsect
+[ROG-DRIVER_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+ClassName="Samples" ; TODO: edit ClassName
+DiskName = "ROG-DRIVER Installation Disk"
+ROG-DRIVER.DeviceDesc = "ROG-DRIVER Device"
+ROG-DRIVER.SVCDESC = "ROG-DRIVER Service"
